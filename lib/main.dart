@@ -1,68 +1,50 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+class Player {
+  // step 1
+  // String name = 'kim';
+
+  // step 2
+  // String name;
+  // Player(this.name);
+
+  // step 3
+  String? name;
+  Player({required this.name});
+}
+
 void main() {
-  runApp(const MyApp());
+  // step 1
+  // var kim = Player();
+
+  // step 2
+  // var kim = Player('kim');
+
+  // step 3
+  var kim = Player(name: 'kim');
+
+  runApp(App());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+// App은 material(google), cupertino(apple) 디자인 시스템 중 하나 return
+class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // throw UnimplementedError();
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.red.shade900),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+      home: Scaffold(
+        appBar: AppBar(
+          title: Center(child: Text('Hello flutter!')),
+          // centerTitle: false,
+          // 그림자
+          // elevation: 1,
+          // title: Text('Hello flutter'),
+          backgroundColor: Color.fromARGB(75, 4, 203, 173),
         ),
+        // new를 쓰던 말던 상관없음
+        body: new Center(child: Text('Hello world!')),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
