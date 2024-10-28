@@ -5,8 +5,6 @@ import 'package:toonflix/services/api_service.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
-  // final 사용 시 immutable 관련 warning solve
-  // Future type으로 선언 이후 데이터가 fetch 되는 형식이라 final 선언 시 immutable로 간주
   final Future<List<WebtoonModel>> webtoons = ApiService().getTodaysToons();
 
   @override
@@ -26,10 +24,39 @@ class HomeScreen extends StatelessWidget {
           future: webtoons,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              // snapshot.error 등 다른 option도 사용 가능
-              return const Text('There is data!');
+              // 1 - 가장 간단한 ListView
+              // return ListView(
+              //   children: [
+              //     for (var webtoon in snapshot.data!) Text(webtoon.title)
+              //   ],
+              // );
+              // 2 - index를 활용해 사용자가 현재 보고 있는 화면만 build, 나머지는 memory에서 delete
+              // return ListView.builder(
+              //   scrollDirection: Axis.vertical,
+              //   itemCount: snapshot.data!.length,
+              //   itemBuilder: (context, index) {
+              //     print(index);
+              //     var webtoon = snapshot.data![index];
+              //     return Text(webtoon.title);
+              //   },
+              // );
+              // 3 - List에 간격 설정
+              return ListView.separated(
+                scrollDirection: Axis.vertical,
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  print(index);
+                  var webtoon = snapshot.data![index];
+                  return Text(webtoon.title);
+                },
+                separatorBuilder: (context, index) => const SizedBox(
+                  height: 10,
+                ),
+              );
             }
-            return const Text('Loading...');
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }),
     );
   }
