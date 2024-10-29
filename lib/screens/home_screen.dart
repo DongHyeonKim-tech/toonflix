@@ -28,7 +28,7 @@ class HomeScreen extends StatelessWidget {
               return Column(
                 children: [
                   const SizedBox(
-                    height: 50,
+                    height: 20,
                   ),
                   Expanded(child: makeList(snapshot))
                 ],
