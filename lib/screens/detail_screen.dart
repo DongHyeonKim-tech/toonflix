@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toonflix/models/webtoon_detail_model.dart';
 import 'package:toonflix/models/webtoon_episode_model.dart';
 import 'package:toonflix/services/api_service.dart';
@@ -22,12 +23,40 @@ class _DetailScreenState extends State<DetailScreen> {
   // Future<WebtoonDetailModel> webtoon = ApiService.getToonById(widget.id);
   late Future<WebtoonDetailModel> webtoon;
   late Future<List<WebtoonEpisodeModel>> episodes;
+  late SharedPreferences prefs;
+  bool isLiked = false;
+
+  Future initPrefs() async {
+    prefs = await SharedPreferences.getInstance();
+    final likedToons = prefs.getStringList('likedToons');
+    if (likedToons != null) {
+      setState(() {
+        isLiked = likedToons.contains(widget.id);
+      });
+    } else {
+      await prefs.setStringList('likedToons', []);
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     webtoon = ApiService.getToonById(widget.id);
     episodes = ApiService.getLatestEpisodesById(widget.id);
+    initPrefs();
+  }
+
+  onHeartTap() async {
+    final likedToons = prefs.getStringList('likedToons');
+    if (likedToons != null) {
+      isLiked ? likedToons.remove(widget.id) : likedToons.add(widget.id);
+      await prefs.setStringList('likedToons', likedToons);
+      setState(() {
+        isLiked = !isLiked;
+      });
+    } else {
+      prefs.setStringList('likedToons', [widget.id]);
+    }
   }
 
   @override
@@ -41,6 +70,14 @@ class _DetailScreenState extends State<DetailScreen> {
           elevation: 2,
           backgroundColor: Colors.white,
           foregroundColor: Colors.green,
+          actions: [
+            IconButton(
+              icon: Icon(
+                isLiked ? Icons.favorite : Icons.favorite_outline_outlined,
+              ),
+              onPressed: onHeartTap,
+            )
+          ],
           title: Text(
             widget.title,
             style: const TextStyle(fontSize: 24),
